@@ -1,0 +1,60 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  padding: 32px;
+}
+
+.containerButtons {
+  padding-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.containerButtons button {
+  border: 2px solid #FF9500;
+  border-radius: 8px;
+  background-color: #2d2d2d;
+  color: #fff;
+  width: 124px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 0 4px 4px #1d1d1d inset;
+  gap: 4px;
+}
+
+.containerButtons button:hover {
+  box-shadow: 0 0px 8px 4px #FF9500;
+}
+
+.clock {
+  display: flex;
+  justify-content: center;
+}
+
+.clock span {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  font-size: 64px;
+  padding: 0 4px;
+  color: #FF9500;
+  display: inline-block;
+  min-width: 116px;
+}
+
+.clock .divider {
+  min-width: max-content;
+  max-width: max-content;
+}
+
+.clock span:nth-last-child(1) {
+  font-size: 36px;
+  min-width: 68px;
+}
