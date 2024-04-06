@@ -1,3 +1,6 @@
+import {createGlobalStyle} from 'styled-components'
+
+export const GlobalStyle = createGlobalStyle`
 body {
   background-color: #000;
   color: #fff;
@@ -17,5 +20,9 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
 }
+
+:root {
+  font-size: 62.5%; /* 10px */
+}
+`

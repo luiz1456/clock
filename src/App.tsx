@@ -1,8 +1,12 @@
-import PomodoroTimer from "./components/pomodoroTimer/index"
+import PomodoroTimer from "./pages/pomodoroTimer/index"
+import { GlobalStyle } from "./globalStyle"
 
 function App() {
   return (
-    <PomodoroTimer />
+    <>
+      <GlobalStyle />
+      <PomodoroTimer />
+    </>
   )
 }
 
