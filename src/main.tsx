@@ -3,21 +3,16 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 
 import { createHashRouter, RouterProvider } from 'react-router-dom'
-import Oi from './pages/cronometro/index.tsx'
 
 const router = createHashRouter([
   {
     path: '/',
-   element: <App />
+    element: <App />
   },
-  {
-    path: 'cronometro',
-    element: <Oi />
-  }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+      <RouterProvider router={router} />
   </React.StrictMode>,
 )

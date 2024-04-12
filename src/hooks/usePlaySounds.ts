@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react"
 
 interface Iprops {
-  sound: any
-  repeat: boolean
+  sound: string
+  repeat?: boolean
 }
 
 export default function usePlaySounds({ sound, repeat }: Iprops) {
@@ -16,16 +16,16 @@ export default function usePlaySounds({ sound, repeat }: Iprops) {
     soundRef.current.loop = true
   }
 
-  const play = () => {
+  const playAudio = () => {
     soundRef.current?.play()
   }
 
-  const stop = () => {
+  const stopAudio = () => {
     soundRef.current?.pause()
   }
 
   return {
-    play,
-    stop,
+    playAudio,
+    stopAudio,
   }
 }

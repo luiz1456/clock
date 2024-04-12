@@ -1,23 +1,36 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import usePlaySounds from '../../hooks/usePlaySounds.ts';
+import useCreateTimerConfig from './hooks/useCreateTimerConfig.ts';
 import { IoPlay, IoPause, IoReload } from 'react-icons/io5'
 import { BiSolidPencil } from "react-icons/bi";
 import SetNewTimer from './components/setNewTimer/index.tsx'
 import AlarmRinging from './components/alarmRinging.tsx/index.tsx';
-import alarm from '../../assets/sounds/alarm.mp3'
 import Button from '../../components/button/Button.tsx';
-import { Clock, Container, ContainerButtons } from './components/style.ts';
+import alarmSound from '../../assets/sounds/alarm.mp3'
+import { Clock, Container, ContainerButtons } from './style.ts';
+
+interface ItimerConfig {
+  numberOfFocusPeriods: number,
+  longPauseInSeconds: number,
+  shortBreakInSeconds: number,
+  focusPeriodsInSeconds: number
+}
+interface ItimerState {
+  currentInterval: number,
+  currentTime: number,
+  isFocusPeriod: boolean
+}
 
 export default function pomodoroTimer() {
-  const { play, stop } = usePlaySounds({ sound: alarm, repeat: true })
 
-  let totalTimeInSeconds = Number(localStorage.getItem('time')) || 1500
-  // let totalTimeInSeconds = Number(localStorage.getItem('time')) || Number(localStorage.getItem('newTimer')) || 1500
-  const [time, setTime] = useState(totalTimeInSeconds)
-  localStorage.setItem('time', time.toString())
-
-  const { hours, minutes, seconds } = {
-    hours: Math.floor(time / 60 / 60),
+  if (!localStorage.getItem("timerConfig")) {
+    useCreateTimerConfig({})
+  }
+  const timerConfig: ItimerConfig = JSON.parse(localStorage.getItem('timerConfig') as string)
+  const timerState: ItimerState = JSON.parse(localStorage.getItem('timerState') as string)
+  const { playAudio, stopAudio } = usePlaySounds({ sound: alarmSound, repeat: true })
+  const [time, setTime] = useState<number>(timerState.currentTime)
+  const { minutes, seconds } = {
     minutes: Math.floor(time / 60 % 60),
     seconds: time % 60
   }
@@ -25,59 +38,75 @@ export default function pomodoroTimer() {
   const [isPaused, setIsPaused] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
   const [alarmRinging, setAlarmRinging] = useState(false)
+  const [isFocusPeriod, setIsFocusPeriod] = useState(timerState.isFocusPeriod)
 
-  const startStop = () => {
-    clearInterval(timerRef.current)
-    setIsPaused(!isPaused)
+  useEffect(() => {
+    localStorage.setItem('timerState', JSON.stringify({ ...timerState, isFocusPeriod: isFocusPeriod }))
+    if (isFocusPeriod) {
+      setTime(time || timerConfig.focusPeriodsInSeconds)
+      return
+    }
+    if (timerState.currentInterval === timerConfig.numberOfFocusPeriods) {
+      setTime(time || timerConfig.longPauseInSeconds)
+      return
+    }
+    setTime(time || timerConfig.shortBreakInSeconds)
+  }, [isFocusPeriod])
 
+  useEffect(() => {
+    if (time === 0) {
+      timeIsUp()
+    }
+    localStorage.setItem('timerState', JSON.stringify({ ...timerState, currentTime: time }))
+  }, [time])
+
+  const start = () => {
+    setIsPaused(false)
     timerRef.current = setInterval(() => {
-      if (isPaused) {
-        totalTimeInSeconds--
-
-        if (totalTimeInSeconds >= 0) {
-          setTime(totalTimeInSeconds)
-        }
-        if (totalTimeInSeconds === 0) {
-          timeIsUp()
-        }
-      }
-      if (isPaused === false) {
-        clearInterval(timerRef.current)
-      }
+      setTime(prev => prev - 1)
     }, 1000)
   }
 
-  const timeIsUp = () => {
-    setTime(Number(localStorage.getItem('newTimer')) || 1500)
+  const stop = () => {
     clearInterval(timerRef.current)
+    setIsPaused(true)
+  }
+
+  const timeIsUp = () => {
+    if (isFocusPeriod && timerState.currentInterval < timerConfig.numberOfFocusPeriods) {
+      timerState.currentInterval++
+    }
+    setIsFocusPeriod(!isFocusPeriod)
     setAlarmRinging(true)
     setIsEditing(false)
-    setIsPaused(true)
-    play()
+    playAudio()
+    stop()
   }
 
   const resetTimer = () => {
-    setTime(Number(localStorage.getItem('newTimer')) || 1500)
-    clearInterval(timerRef.current)
-    setIsPaused(true)
+    stopAudio()
     stop()
+    if (isFocusPeriod) {
+      setTime(timerConfig.focusPeriodsInSeconds)
+      return
+    } 
+    setTime(timerConfig.shortBreakInSeconds)    
   }
 
   return (
     <Container>
       {isEditing && <SetNewTimer
-        setTime={setTime}
-        timerRef={timerRef}
-        setIsPaused={setIsPaused}
         setIsEditing={setIsEditing}
+        setTime={setTime}
+        stop={stop}
       />}
       {alarmRinging &&
-        <AlarmRinging setAlarmRinging={setAlarmRinging} stop={stop} />
+        <AlarmRinging
+          setAlarmRinging={setAlarmRinging}
+          stopAudio={stopAudio} />
       }
       <Clock>
         <div>
-          <span>{hours.toString().padStart(2, '0')}</span>
-          <span className="divider">:</span>
           <span>{minutes.toString().padStart(2, '0')}</span>
           <span className="divider">:</span>
           <span>{seconds.toString().padStart(2, '0')}</span>
@@ -85,7 +114,10 @@ export default function pomodoroTimer() {
       </Clock>
       <ContainerButtons>
         <Button onClick={() => setIsEditing(true)} flex={true}> <BiSolidPencil /> Edit </Button>
-        <Button onClick={startStop} flex={true}> {isPaused ? <IoPlay /> : <IoPause />} {isPaused ? 'Start' : 'Pause'} </Button>
+        {isPaused
+          ? <Button onClick={start} flex={true}><IoPlay /> Start </Button>
+          : <Button onClick={stop} flex={true}><IoPause />Stop </Button>
+        }
         <Button onClick={resetTimer} flex={true}> <IoReload /> Reset </Button>
       </ContainerButtons>
     </Container>

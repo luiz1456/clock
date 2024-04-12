@@ -13,6 +13,7 @@ export const Container = styled.div`
 export const Clock = styled.div`
   display: flex;
   justify-content: center;
+  min-width: 40.0rem;
 
   span {
     font-family: "Orbitron", sans-serif;
@@ -22,6 +23,7 @@ export const Clock = styled.div`
     color: #FF9500;
     display: inline-block;
     min-width: 14.2rem;
+    text-align: center;
   }
 
   span:nth-last-child(1) {

@@ -1,18 +1,30 @@
 import Lottie from "lottie-react";
-import animation from '../../../../assets/animation/animation.json'
+import bellAnimation from '../../../../assets/bellAnimation/bellAnimation.json'
+import pulsingAnimation from '../../../../assets/pulsingAnimation/pulsingAnimation.json'
 import { ButtonStyles } from "../../../../components/button/style";
-import { Container } from "./style";
+import { Container, ContainerAnimation } from "./style";
 
-export default function AlarmRinging({ stop, setAlarmRinging }: any) {
+interface Iprops {
+  stopAudio: () => void,
+  setAlarmRinging: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export default function AlarmRinging({ stopAudio, setAlarmRinging }: Iprops) {
   const stopAlarmRinging = () => {
-    stop()
     setAlarmRinging(false)
+    stopAudio()
   }
 
   return (
     <Container>
-      <Lottie className="animation" animationData={animation} loop={true}/>
-      <ButtonStyles onClick={stopAlarmRinging}>Stop</ButtonStyles>
+      <div>
+        <h1>Fim do periodo de foco!</h1>
+        <ContainerAnimation>
+          <Lottie className="animation" animationData={pulsingAnimation} loop={true} />
+          <Lottie className="bellAnimation" animationData={bellAnimation} loop={true} />
+        </ContainerAnimation>
+        <ButtonStyles onClick={stopAlarmRinging}>Stop</ButtonStyles>
+      </div>
     </Container>
   )
 }

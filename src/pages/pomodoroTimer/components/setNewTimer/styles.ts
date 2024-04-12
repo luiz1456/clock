@@ -22,21 +22,20 @@ export const Container = styled(ContainerModal)`
 export const Form = styled.form`
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
-  flex-direction: column;
+  justify-content: center;
+  flex-wrap: wrap;
   padding: 2.4rem;
   width: 100%;
-  height: 80%;
+  height: 70%;
 
   div {
     display: flex;
-    gap: 2.4rem;
+    flex-direction: column;
     align-items: baseline;
     justify-content: center;
-    width: 100%;
+    width: 50%;
 
     label {
-      width: 6.8rem;
       font-size: 1.4rem;
     }
 
@@ -47,7 +46,6 @@ export const Form = styled.form`
       padding: 0.4rem;
       color: #ffffff;
       flex: 1;
-      max-width: 70%;
       height: 3.6rem;
 
       &:focus {

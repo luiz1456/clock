@@ -9,6 +9,6 @@ interface Iprops {
 
 export default function Button({children, onClick, flex}: Iprops) {
   return (
-    <ButtonStyles onClick={onClick} Flex={flex || null}>{children}</ButtonStyles>
+    <ButtonStyles onClick={onClick} $flex={flex}>{children}</ButtonStyles>
   )
 }
