@@ -34,6 +34,7 @@ export const Form = styled.form`
     align-items: baseline;
     justify-content: center;
     width: 50%;
+    padding: 1.2rem;
 
     label {
       font-size: 1.4rem;
@@ -47,6 +48,7 @@ export const Form = styled.form`
       color: #ffffff;
       flex: 1;
       height: 3.6rem;
+      width: 100%; 
 
       &:focus {
         border: 0.1rem solid #ddd;
