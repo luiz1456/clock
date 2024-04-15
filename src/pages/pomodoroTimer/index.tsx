@@ -22,9 +22,10 @@ export default function pomodoroTimer() {
     setTime,
     setIsFocusPeriod,
     isPaused,
-    start,
     stop,
-    resetTimer
+    resetTimer,
+    setIsPaused,
+    timerRef
   } = useTimerControl({stopAudio})
 
   const { minutes, seconds } = {
@@ -52,6 +53,12 @@ export default function pomodoroTimer() {
     localStorage.setItem('timerState', JSON.stringify({ ...timerState, currentTime: time }))
   }, [time])
 
+  const start = () => {
+    setIsPaused(false)
+    timerRef.current = setInterval(() => {
+      setTime(prev => prev - 1)
+    }, 1000)
+  }
 
   const timeIsUp = () => {
     if (isFocusPeriod && timerState.currentInterval < timerConfig.numberOfFocusPeriods) {

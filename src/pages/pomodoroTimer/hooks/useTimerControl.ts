@@ -29,13 +29,6 @@ export default function useTimerControl({ stopAudio }: Iprops) {
   const [time, setTime] = useState<number>(timerState.currentTime)
   const [isFocusPeriod, setIsFocusPeriod] = useState(timerState.isFocusPeriod)
 
-  const start = () => {
-    setIsPaused(false)
-    timerRef.current = setInterval(() => {
-      setTime(prev => prev - 1)
-    }, 1000)
-  }
-
   const stop = () => {
     clearInterval(timerRef.current)
     setIsPaused(true)
@@ -63,8 +56,9 @@ export default function useTimerControl({ stopAudio }: Iprops) {
     isFocusPeriod,
     isPaused,
     setIsFocusPeriod,
-    start,
     stop,
-    resetTimer
+    resetTimer,
+    setIsPaused,
+    timerRef
   }
 }
