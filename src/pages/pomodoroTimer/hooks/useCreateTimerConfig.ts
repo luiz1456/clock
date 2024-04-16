@@ -5,7 +5,7 @@ interface Iprops {
   focusPeriods?: string
 }
 
-export default function useCreateTimerConfig({ focusPeriodSize, shortBreak, longPause, focusPeriods }: Iprops) {
+export function useCreateTimerConfig({ focusPeriodSize, shortBreak, longPause, focusPeriods }: Iprops) {
 
 
   const focusPeriodsInSeconds = (Number(focusPeriodSize) * 60) || 25 * 60

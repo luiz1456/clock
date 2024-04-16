@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
-import useCreateTimerConfig from './useCreateTimerConfig';
+import { useCreateTimerConfig } from './useCreateTimerConfig';
 
-interface ItimerConfig {
+export interface ItimerConfig {
   numberOfFocusPeriods: number,
   longPauseInSeconds: number,
   shortBreakInSeconds: number,
@@ -18,7 +18,7 @@ interface Iprops {
   stopAudio: () => void
 }
 
-export default function useTimerControl({ stopAudio }: Iprops) {
+export function useTimerControl({ stopAudio }: Iprops) {
   if (!localStorage.getItem("timerConfig")) {
     useCreateTimerConfig({})
   }

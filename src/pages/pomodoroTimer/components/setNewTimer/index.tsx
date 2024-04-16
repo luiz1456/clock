@@ -2,7 +2,7 @@ import { FormEvent } from "react"
 import { IoClose, IoCheckmark } from "react-icons/io5"
 import { Container, Form } from './styles'
 import Button from "../../../../components/button/Button"
-import useCreateTimerConfig from "../../hooks/useCreateTimerConfig"
+import { useCreateTimerConfig } from "../../hooks/useCreateTimerConfig"
 
 interface Iprops {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>,
@@ -35,11 +35,11 @@ export default function SetNewTimer({ setIsEditing, setTime, stop, setCurrentPer
         </div>
         <div>
           <label htmlFor="shortBreak">Short break:</label>
-          <input id="shortBreak" type="number" name="shortBreak" placeholder="In minutes" required  max={60} min={1} />
+          <input id="shortBreak" type="number" name="shortBreak" placeholder="In minutes" required max={60} min={1} />
         </div>
         <div>
           <label htmlFor="longPause">Long pause:</label>
-          <input id="longPause" type="number" name="longPause" placeholder="In minutes" required  max={60} min={1} />
+          <input id="longPause" type="number" name="longPause" placeholder="In minutes" required max={60} min={1} />
         </div>
         <div>
           <label htmlFor="focusPeriods">Focus periods:</label>

@@ -4,20 +4,28 @@ import pulsingAnimation from '../../../../assets/pulsingAnimation/pulsingAnimati
 import { ButtonStyles } from "../../../../components/button/style";
 import { Container, ContainerAnimation } from "./style";
 import { ContainerButtons } from "../../style";
+import { ItimerConfig } from "../../hooks/useTimerControl";
 
 interface Iprops {
   stopAudio: () => void,
   setAlarmRinging: React.Dispatch<React.SetStateAction<boolean>>,
   alarmMessage: string,
+  timerConfig: ItimerConfig,
+  setIsFocusPeriod: React.Dispatch<React.SetStateAction<boolean>>,
+  setTime: React.Dispatch<React.SetStateAction<number>>
 }
 
-export default function AlarmRinging({ stopAudio, setAlarmRinging, alarmMessage }: Iprops) {
+export default function AlarmRinging({ stopAudio, setAlarmRinging, alarmMessage, timerConfig, setIsFocusPeriod, setTime }: Iprops) {
   const stopAlarmRinging = () => {
     setAlarmRinging(false)
     stopAudio()
   }
 
   const resetTimer = () => {
+    const timerState = JSON.stringify({ currentTime: timerConfig.focusPeriodsInSeconds, currentInterval: 0, isFocusPeriod: true })
+    localStorage.setItem('timerState', timerState)
+    setTime(timerConfig.focusPeriodsInSeconds)
+    setIsFocusPeriod(true)
     stopAlarmRinging()
   }
 

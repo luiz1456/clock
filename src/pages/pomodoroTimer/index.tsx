@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import useTimerControl from './hooks/useTimerControl.ts';
+import { useTimerControl } from './hooks/useTimerControl.ts';
 import AlarmRinging from './components/alarmRinging.tsx/index.tsx';
 import SetNewTimer from './components/setNewTimer/index.tsx'
 import Button from '../../components/button/Button.tsx';
@@ -88,9 +88,12 @@ export default function pomodoroTimer() {
       />}
       {alarmRinging &&
         <AlarmRinging
+          setIsFocusPeriod={setIsFocusPeriod}
           setAlarmRinging={setAlarmRinging}
-          stopAudio={stopAudio}
           alarmMessage={alarmMessage}
+          timerConfig={timerConfig}
+          stopAudio={stopAudio}
+          setTime={setTime}
         />}
       <Clock>
         <div className="infoCurrentPeriod">
