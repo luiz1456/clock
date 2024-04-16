@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const ContainerModal = styled.div`
-  background-color: #1d1d1dee;
+  background-color: #111111f1;
   position: absolute;
   top: 0;
   left: 0;

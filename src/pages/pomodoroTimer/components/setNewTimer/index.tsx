@@ -7,11 +7,12 @@ import useCreateTimerConfig from "../../hooks/useCreateTimerConfig"
 interface Iprops {
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>,
   setTime: React.Dispatch<React.SetStateAction<number>>,
+  setCurrentPeriod: React.Dispatch<React.SetStateAction<string>>,
   stop: () => void
 }
 
 
-export default function SetNewTimer({ setIsEditing, setTime, stop }: Iprops) {
+export default function SetNewTimer({ setIsEditing, setTime, stop, setCurrentPeriod }: Iprops) {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
@@ -19,6 +20,7 @@ export default function SetNewTimer({ setIsEditing, setTime, stop }: Iprops) {
     const formData = new FormData(form)
     const { timerConfig } = useCreateTimerConfig(Object.fromEntries(formData))
     setTime(timerConfig.focusPeriodsInSeconds)
+    setCurrentPeriod('Focus')
     setIsEditing(false)
     form.reset()
     stop()

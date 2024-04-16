@@ -12,8 +12,26 @@ export const Container = styled.div`
 
 export const Clock = styled.div`
   display: flex;
-  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   min-width: 40.0rem;
+
+  .infoPeriodsCompleted {
+    width: 100%;
+    text-align: end;
+    padding: 1.4rem 2.4rem 0 0;
+    font-family: 'PopPins', sans-serif;
+    font-style: italic;
+    font-weight: 600;
+    color: #aaa;
+    font-size: 1.2rem;
+  }
+  .infoCurrentPeriod {
+    font-family: 'PopPins', sans-serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 2.4rem;
+  }
 
   span {
     font-family: "Orbitron", sans-serif;

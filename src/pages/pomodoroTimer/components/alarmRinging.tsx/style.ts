@@ -3,6 +3,13 @@ import { ContainerModal } from "../../../../components/containerModal/style";
 
 export const Container = styled(ContainerModal)`
   &>div {
+    
+  h1 {
+    font-family: "Poppins";
+    font-size: 2.4rem;
+    font-style: italic;
+    font-weight: 500;
+  }
     display: flex;
     justify-content: center;
     align-items: center;
@@ -30,11 +37,5 @@ export const ContainerAnimation = styled.div`
     position: absolute;
     width: 55%;
     height: 55%;
-  }
-
-  h1 {
-    position: absolute;
-    width: 50%;
-    font-family: "Poppins";
   }
 `

@@ -13,6 +13,8 @@ export default function pomodoroTimer() {
   const { playAudio, stopAudio } = usePlaySounds({ sound: alarmSound, repeat: true })
   const [alarmRinging, setAlarmRinging] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [currentPeriod, setCurrentPeriod] = useState('Focus')
+  const [alarmMessage, setAlarmMessage] = useState('')
 
   const {
     timerConfig,
@@ -22,11 +24,10 @@ export default function pomodoroTimer() {
     setTime,
     setIsFocusPeriod,
     isPaused,
+    start,
     stop,
     resetTimer,
-    setIsPaused,
-    timerRef
-  } = useTimerControl({stopAudio})
+  } = useTimerControl({ stopAudio })
 
   const { minutes, seconds } = {
     minutes: Math.floor(time / 60 % 60),
@@ -36,13 +37,16 @@ export default function pomodoroTimer() {
   useEffect(() => {
     localStorage.setItem('timerState', JSON.stringify({ ...timerState, isFocusPeriod: isFocusPeriod }))
     if (isFocusPeriod) {
+      setCurrentPeriod('Focus')
       setTime(time || timerConfig.focusPeriodsInSeconds)
       return
     }
     if (timerState.currentInterval === timerConfig.numberOfFocusPeriods) {
+      setCurrentPeriod('Long Break')
       setTime(time || timerConfig.longPauseInSeconds)
       return
     }
+    setCurrentPeriod('Short Break')
     setTime(time || timerConfig.shortBreakInSeconds)
   }, [isFocusPeriod])
 
@@ -53,13 +57,6 @@ export default function pomodoroTimer() {
     localStorage.setItem('timerState', JSON.stringify({ ...timerState, currentTime: time }))
   }, [time])
 
-  const start = () => {
-    setIsPaused(false)
-    timerRef.current = setInterval(() => {
-      setTime(prev => prev - 1)
-    }, 1000)
-  }
-
   const timeIsUp = () => {
     if (isFocusPeriod && timerState.currentInterval < timerConfig.numberOfFocusPeriods) {
       timerState.currentInterval++
@@ -69,26 +66,43 @@ export default function pomodoroTimer() {
     setIsEditing(false)
     playAudio()
     stop()
+
+    if (isFocusPeriod) {
+      setAlarmMessage("End of focus period!")
+      return
+    }
+    if (timerState.currentInterval === timerConfig.numberOfFocusPeriods) {
+      setAlarmMessage('End of Long Break!')
+      return
+    }
+    setAlarmMessage('End of short break!')
   }
 
   return (
     <Container>
       {isEditing && <SetNewTimer
+        setCurrentPeriod={setCurrentPeriod}
         setIsEditing={setIsEditing}
         setTime={setTime}
         stop={stop}
       />}
       {alarmRinging &&
         <AlarmRinging
-          stopAudio={stopAudio}
           setAlarmRinging={setAlarmRinging}
-          resetTimer={resetTimer}
+          stopAudio={stopAudio}
+          alarmMessage={alarmMessage}
         />}
       <Clock>
+        <div className="infoCurrentPeriod">
+          <p>{currentPeriod}</p>
+        </div>
         <div>
           <span>{minutes.toString().padStart(2, '0')}</span>
           <span className="divider">:</span>
           <span>{seconds.toString().padStart(2, '0')}</span>
+        </div>
+        <div className='infoPeriodsCompleted'>
+          <p>{timerState.currentInterval}/{timerConfig.numberOfFocusPeriods} Focus period(s) completed</p>
         </div>
       </Clock>
       <ContainerButtons>

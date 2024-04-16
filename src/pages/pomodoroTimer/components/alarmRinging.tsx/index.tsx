@@ -8,19 +8,23 @@ import { ContainerButtons } from "../../style";
 interface Iprops {
   stopAudio: () => void,
   setAlarmRinging: React.Dispatch<React.SetStateAction<boolean>>,
-  resetTimer: () => void
+  alarmMessage: string,
 }
 
-export default function AlarmRinging({ stopAudio, setAlarmRinging, resetTimer }: Iprops) {
+export default function AlarmRinging({ stopAudio, setAlarmRinging, alarmMessage }: Iprops) {
   const stopAlarmRinging = () => {
     setAlarmRinging(false)
     stopAudio()
   }
 
+  const resetTimer = () => {
+    stopAlarmRinging()
+  }
+
   return (
     <Container>
       <div>
-        <h1>Fim do periodo de foco!</h1>
+        <h1>{alarmMessage}</h1>
         <ContainerAnimation>
           <Lottie className="animation" animationData={pulsingAnimation} loop={true} />
           <Lottie className="bellAnimation" animationData={bellAnimation} loop={true} />
