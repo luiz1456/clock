@@ -13,7 +13,7 @@ export function useCreateTimerConfig({ focusPeriodSize, shortBreak, longPause, f
   const longPauseInSeconds = (Number(longPause) * 60) || 15 * 60
   const numberOfFocusPeriods = Number(focusPeriods) || 4
   const timerConfig = { focusPeriodsInSeconds, shortBreakInSeconds, longPauseInSeconds, numberOfFocusPeriods }
-  const timerState = JSON.stringify({ currentTime: timerConfig.focusPeriodsInSeconds, currentInterval: 0, isFocusPeriod: true })
+  const timerState = JSON.stringify({ currentTime: timerConfig.focusPeriodsInSeconds, fullFocusPeriods: 0, isFocusPeriod: true })
   localStorage.setItem('timerConfig', JSON.stringify(timerConfig))
   localStorage.setItem('timerState', timerState)
 

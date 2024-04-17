@@ -9,7 +9,7 @@ export interface ItimerConfig {
 }
 
 interface ItimerState {
-  currentInterval: number,
+  fullFocusPeriods: number,
   currentTime: number,
   isFocusPeriod: boolean
 }
@@ -42,14 +42,14 @@ export function useTimerControl({ stopAudio }: Iprops) {
     setIsPaused(true)
   }
 
-  const resetTimer = () => {
+  const restartTimer = () => {
     stopAudio()
     stop()
     if (isFocusPeriod) {
       setTime(timerConfig.focusPeriodsInSeconds)
       return
     }
-    if (timerState.currentInterval === timerConfig.numberOfFocusPeriods) {
+    if (timerState.fullFocusPeriods === timerConfig.numberOfFocusPeriods) {
       setTime(time || timerConfig.longPauseInSeconds)
       return
     }
@@ -66,7 +66,7 @@ export function useTimerControl({ stopAudio }: Iprops) {
     setIsFocusPeriod,
     start,
     stop,
-    resetTimer,
+    restartTimer,
     setIsPaused,
     timerRef
   }

@@ -26,7 +26,7 @@ export default function pomodoroTimer() {
     isPaused,
     start,
     stop,
-    resetTimer,
+    restartTimer,
   } = useTimerControl({ stopAudio })
 
   const { minutes, seconds } = {
@@ -41,7 +41,7 @@ export default function pomodoroTimer() {
       setTime(time || timerConfig.focusPeriodsInSeconds)
       return
     }
-    if (timerState.currentInterval === timerConfig.numberOfFocusPeriods) {
+    if (timerState.fullFocusPeriods === timerConfig.numberOfFocusPeriods) {
       setCurrentPeriod('Long Break')
       setTime(time || timerConfig.longPauseInSeconds)
       return
@@ -54,12 +54,18 @@ export default function pomodoroTimer() {
     if (time === 0) {
       timeIsUp()
     }
-    localStorage.setItem('timerState', JSON.stringify({ ...timerState, currentTime: time }))
+    if (currentPeriod !== 'Long Break') {
+      localStorage.setItem('timerState', JSON.stringify({ ...timerState, currentTime: time }))
+    }
   }, [time])
 
   const timeIsUp = () => {
-    if (isFocusPeriod && timerState.currentInterval < timerConfig.numberOfFocusPeriods) {
-      timerState.currentInterval++
+    if (isFocusPeriod && timerState.fullFocusPeriods < timerConfig.numberOfFocusPeriods) {
+      timerState.fullFocusPeriods++
+    }
+    if (currentPeriod === 'Long Break') {
+      const timerState = JSON.stringify({ currentTime: timerConfig.focusPeriodsInSeconds, fullFocusPeriods: 0, isFocusPeriod: true })
+      localStorage.setItem('timerState', timerState)
     }
     setIsFocusPeriod(!isFocusPeriod)
     setAlarmRinging(true)
@@ -71,8 +77,8 @@ export default function pomodoroTimer() {
       setAlarmMessage("End of focus period!")
       return
     }
-    if (timerState.currentInterval === timerConfig.numberOfFocusPeriods) {
-      setAlarmMessage('End of Long Break!')
+    if (timerState.fullFocusPeriods === timerConfig.numberOfFocusPeriods) {
+      setAlarmMessage('Full Cycle!')
       return
     }
     setAlarmMessage('End of short break!')
@@ -105,7 +111,7 @@ export default function pomodoroTimer() {
           <span>{seconds.toString().padStart(2, '0')}</span>
         </div>
         <div className='infoPeriodsCompleted'>
-          <p>{timerState.currentInterval}/{timerConfig.numberOfFocusPeriods} Focus period(s) completed</p>
+          <p>{timerState.fullFocusPeriods}/{timerConfig.numberOfFocusPeriods} Focus period(s) completed</p>
         </div>
       </Clock>
       <ContainerButtons>
@@ -114,7 +120,7 @@ export default function pomodoroTimer() {
           ? <Button onClick={start} flex={true}><IoPlay /> Start </Button>
           : <Button onClick={stop} flex={true}><IoPause />Stop </Button>
         }
-        <Button onClick={resetTimer} flex={true}> <IoReload /> Reset </Button>
+        <Button onClick={restartTimer} flex={true}> <IoReload /> restart </Button>
       </ContainerButtons>
     </Container>
   )
